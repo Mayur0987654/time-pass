@@ -2,14 +2,14 @@
 <html lang="en">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Image to PDF • NexLab</title>
+<title>Image to PDF • TimePassLab</title>
 <link rel="stylesheet" href="../../css/style.css">
 <style>
 .dropzone{border:1.5px dashed #3c4664;border-radius:18px;padding:34px 20px;text-align:center;background:#0b0f18;cursor:pointer;transition:.2s}.dropzone.drag{border-color:#7c5cff;background:#11152a}.dropzone strong{display:block;font-size:1.08rem;margin-bottom:6px}.dropzone p{margin:0;color:#9ba3b5}.dropzone input{display:none}.pdf-layout{display:grid;grid-template-columns:1.15fr .85fr;gap:18px}.image-list{display:grid;gap:10px;margin-top:16px}.image-row{display:grid;grid-template-columns:58px 1fr auto;gap:12px;align-items:center;background:#0b0f18;border:1px solid #252b3c;border-radius:14px;padding:9px}.image-row img{width:58px;height:58px;object-fit:cover;border-radius:9px;background:#111}.image-name{font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.image-meta{font-size:.8rem;color:#8f98ab;margin-top:3px}.row-actions{display:flex;gap:6px}.mini-btn{width:34px;height:34px;border:1px solid #30384e;background:#121725;color:#dfe5f5;border-radius:9px;cursor:pointer}.mini-btn:hover{border-color:#68769e}.empty{padding:20px;text-align:center;color:#7f899e;border:1px solid #22293a;border-radius:14px;margin-top:16px}.options{display:grid;gap:14px}.status{min-height:22px;color:#aeb7cc;font-size:.9rem;margin-top:12px}.action-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}.action-row button{font:inherit}.note{font-size:.84rem;color:#7f899e;line-height:1.5;margin-top:14px}@media(max-width:800px){.pdf-layout{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
-<header class="nav-wrap"><nav class="nav container"><a class="brand" href="../../index.html"><span class="brand-dot"></span>NexLab</a><button class="menu-btn">☰</button><div class="nav-links"><a href="../../index.html">Home</a><a class="active" href="../index.html">Tools</a><a href="../../games/index.html">Games</a></div></nav></header>
+<header class="nav-wrap"><nav class="nav container"><a class="brand" href="../../index.html"><span class="brand-dot"></span>TimePassLab</a><button class="menu-btn">☰</button><div class="nav-links"><a href="../../index.html">Home</a><a class="active" href="../index.html">Tools</a><a href="../../games/index.html">Games</a></div></nav></header>
 <main class="container">
 <section class="page-head"><div class="eyebrow">IMAGE TOOL</div><h1>Image → PDF</h1><p>Drop in JPG, PNG or WebP images, arrange them, and turn them into one PDF.</p></section>
 <section class="pdf-layout">
@@ -56,7 +56,7 @@ document.getElementById('makePdf').onclick=async()=>{
    let w,h,x,y;if(fit==='fill'){if(ir>ar){h=ah;w=h*ir}else{w=aw;h=w/ir}}else{if(ir>ar){w=aw;h=w/ir}else{h=ah;w=h*ir}}
    x=(pw-w)/2;y=(ph-h)/2;const fmt=items[i].file.type.includes('png')?'PNG':items[i].file.type.includes('webp')?'WEBP':'JPEG';pdf.addImage(data,fmt,x,y,w,h,undefined,'FAST');
   }
-  pdf.save('NexLab-images.pdf');statusEl.textContent=`Done — ${items.length} image${items.length===1?'':'s'} added to the PDF.`;
+  pdf.save('TimePassLab-images.pdf');statusEl.textContent=`Done — ${items.length} image${items.length===1?'':'s'} added to the PDF.`;
  }catch(err){console.error(err);statusEl.textContent='Could not create the PDF from one of the images.'}finally{btn.disabled=false}
 };
 render();
