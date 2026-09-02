@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>NexLab</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <header class="nav-wrap">
+    <nav class="nav container">
+      <a class="brand" href="index.html"><span class="brand-dot"></span>NexLab</a>
+      <button class="menu-btn" aria-label="Toggle menu">☰</button>
+      <div class="nav-links">
+        <a href="index.html" class="active">Home</a>
+        <a href="tools/index.html">Tools</a>
+        <a href="games/index.html">Games</a>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero container">
+      <div class="badge">⚡ Built for useful + fun stuff</div>
+      <h1>One place for <span>tools, games & experiments.</span></h1>
+      <p>Fast browser tools. Tiny games. Random projects. No clutter.</p>
+      <div class="hero-actions">
+        <a class="btn primary" href="tools/index.html">Explore Tools</a>
+        <a class="btn secondary" href="games/index.html">Play Games</a>
+      </div>
+    </section>
+
+    <section class="grid container">
+      <a class="card glow" href="tools/index.html">
+        <div class="icon">🔧</div>
+        <h3>Tools</h3>
+        <p>Quick utilities that run right inside your browser.</p>
+        <span>Open tools →</span>
+      </a>
+      <a class="card" href="games/index.html">
+        <div class="icon">🎮</div>
+        <h3>Games</h3>
+        <p>Small games made from scratch with JavaScript.</p>
+        <span>Play now →</span>
+      </a>
+      <div class="card muted">
+        <div class="icon">🧪</div>
+        <h3>Experiments</h3>
+        <p>Visualizers, simulations and weird ideas coming next.</p>
+        <span>Coming soon</span>
+      </div>
+    </section>
+
+    <section class="featured container">
+      <div>
+        <div class="eyebrow">FEATURED</div>
+        <h2>Road Rush</h2>
+        <p>Dodge traffic, survive longer, and beat your high score.</p>
+        <a class="btn primary" href="games/road-rush/index.html">Launch game</a>
+      </div>
+      <div class="mini-road" aria-hidden="true">
+        <div class="lane"></div><div class="lane"></div><div class="lane"></div>
+        <div class="car player-mini">▲</div><div class="car enemy-mini">▼</div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="container footer">NexLab • built with plain HTML, CSS & JavaScript</footer>
+  <script src="js/main.js"></script>
+</body>
+</html>

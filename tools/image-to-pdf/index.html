@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Image to PDF • NexLab</title>
+<link rel="stylesheet" href="../../css/style.css">
+<style>
+.dropzone{border:1.5px dashed #3c4664;border-radius:18px;padding:34px 20px;text-align:center;background:#0b0f18;cursor:pointer;transition:.2s}.dropzone.drag{border-color:#7c5cff;background:#11152a}.dropzone strong{display:block;font-size:1.08rem;margin-bottom:6px}.dropzone p{margin:0;color:#9ba3b5}.dropzone input{display:none}.pdf-layout{display:grid;grid-template-columns:1.15fr .85fr;gap:18px}.image-list{display:grid;gap:10px;margin-top:16px}.image-row{display:grid;grid-template-columns:58px 1fr auto;gap:12px;align-items:center;background:#0b0f18;border:1px solid #252b3c;border-radius:14px;padding:9px}.image-row img{width:58px;height:58px;object-fit:cover;border-radius:9px;background:#111}.image-name{font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.image-meta{font-size:.8rem;color:#8f98ab;margin-top:3px}.row-actions{display:flex;gap:6px}.mini-btn{width:34px;height:34px;border:1px solid #30384e;background:#121725;color:#dfe5f5;border-radius:9px;cursor:pointer}.mini-btn:hover{border-color:#68769e}.empty{padding:20px;text-align:center;color:#7f899e;border:1px solid #22293a;border-radius:14px;margin-top:16px}.options{display:grid;gap:14px}.status{min-height:22px;color:#aeb7cc;font-size:.9rem;margin-top:12px}.action-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}.action-row button{font:inherit}.note{font-size:.84rem;color:#7f899e;line-height:1.5;margin-top:14px}@media(max-width:800px){.pdf-layout{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header class="nav-wrap"><nav class="nav container"><a class="brand" href="../../index.html"><span class="brand-dot"></span>NexLab</a><button class="menu-btn">☰</button><div class="nav-links"><a href="../../index.html">Home</a><a class="active" href="../index.html">Tools</a><a href="../../games/index.html">Games</a></div></nav></header>
+<main class="container">
+<section class="page-head"><div class="eyebrow">IMAGE TOOL</div><h1>Image → PDF</h1><p>Drop in JPG, PNG or WebP images, arrange them, and turn them into one PDF.</p></section>
+<section class="pdf-layout">
+  <div class="panel">
+    <label class="dropzone" id="dropzone"><input id="picker" type="file" accept="image/jpeg,image/png,image/webp" multiple><strong>🖼️ Choose images or drop them here</strong><p>Multiple images supported • stays in your browser</p></label>
+    <div id="imageList" class="image-list"></div><div id="empty" class="empty">No images added yet.</div>
+  </div>
+  <div class="panel options">
+    <div class="field"><label>Page size</label><select id="pageSize"><option value="a4">A4</option><option value="letter">Letter</option></select></div>
+    <div class="field"><label>Orientation</label><select id="orientation"><option value="auto">Auto for each image</option><option value="portrait">Portrait</option><option value="landscape">Landscape</option></select></div>
+    <div class="field"><label>Image fit</label><select id="fit"><option value="contain">Fit whole image</option><option value="fill">Fill page / crop edges</option></select></div>
+    <div class="field"><label>Margin</label><select id="margin"><option value="10">Normal</option><option value="4">Small</option><option value="0">None</option></select></div>
+    <div class="action-row"><button class="btn primary" id="makePdf">Create & download PDF</button><button class="btn secondary" id="clear">Clear</button></div>
+    <div id="status" class="status"></div><div class="note">Tip: use ↑ and ↓ beside each image to control the PDF page order.</div>
+  </div>
+</section>
+</main>
+<script src="../../js/main.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.2/jspdf.umd.min.js"></script>
+<script>
+const picker=document.getElementById('picker'),drop=document.getElementById('dropzone'),list=document.getElementById('imageList'),empty=document.getElementById('empty'),statusEl=document.getElementById('status');
+let items=[];
+function bytes(n){if(n<1024)return n+' B';if(n<1048576)return (n/1024).toFixed(1)+' KB';return (n/1048576).toFixed(1)+' MB'}
+function addFiles(files){[...files].filter(f=>f.type.startsWith('image/')).forEach(file=>{const url=URL.createObjectURL(file);items.push({file,url})});render()}
+function render(){list.innerHTML='';empty.style.display=items.length?'none':'block';items.forEach((it,i)=>{const row=document.createElement('div');row.className='image-row';row.innerHTML=`<img src="${it.url}" alt=""><div><div class="image-name"></div><div class="image-meta">${bytes(it.file.size)} • Page ${i+1}</div></div><div class="row-actions"><button class="mini-btn up" title="Move up">↑</button><button class="mini-btn down" title="Move down">↓</button><button class="mini-btn del" title="Remove">×</button></div>`;row.querySelector('.image-name').textContent=it.file.name;row.querySelector('.up').onclick=()=>move(i,-1);row.querySelector('.down').onclick=()=>move(i,1);row.querySelector('.del').onclick=()=>removeItem(i);list.appendChild(row)})}
+function move(i,d){const n=i+d;if(n<0||n>=items.length)return;[items[i],items[n]]=[items[n],items[i]];render()}
+function removeItem(i){URL.revokeObjectURL(items[i].url);items.splice(i,1);render()}
+picker.onchange=e=>{addFiles(e.target.files);picker.value=''};drop.ondragover=e=>{e.preventDefault();drop.classList.add('drag')};drop.ondragleave=()=>drop.classList.remove('drag');drop.ondrop=e=>{e.preventDefault();drop.classList.remove('drag');addFiles(e.dataTransfer.files)};
+document.getElementById('clear').onclick=()=>{items.forEach(x=>URL.revokeObjectURL(x.url));items=[];statusEl.textContent='';render()};
+function readDataURL(file){return new Promise((res,rej)=>{const r=new FileReader;r.onload=()=>res(r.result);r.onerror=rej;r.readAsDataURL(file)})}
+function imageDims(src){return new Promise((res,rej)=>{const im=new Image();im.onload=()=>res({w:im.naturalWidth,h:im.naturalHeight});im.onerror=rej;im.src=src})}
+document.getElementById('makePdf').onclick=async()=>{
+ if(!items.length){statusEl.textContent='Add at least one image first.';return}
+ if(!window.jspdf){statusEl.textContent='PDF library could not load. Check your internet connection and try again.';return}
+ const btn=document.getElementById('makePdf');btn.disabled=true;statusEl.textContent='Building PDF…';
+ try{
+  const {jsPDF}=window.jspdf,pageSize=document.getElementById('pageSize').value,orientSetting=document.getElementById('orientation').value,fit=document.getElementById('fit').value,margin=+document.getElementById('margin').value;
+  let pdf=null;
+  for(let i=0;i<items.length;i++){
+   statusEl.textContent=`Processing image ${i+1} of ${items.length}…`;
+   const data=await readDataURL(items[i].file),dim=await imageDims(data);let orient=orientSetting==='auto'?(dim.w>=dim.h?'landscape':'portrait'):orientSetting;
+   if(!pdf) pdf=new jsPDF({orientation:orient,unit:'mm',format:pageSize,compress:true}); else pdf.addPage(pageSize,orient);
+   const pw=pdf.internal.pageSize.getWidth(),ph=pdf.internal.pageSize.getHeight(),aw=Math.max(1,pw-margin*2),ah=Math.max(1,ph-margin*2),ir=dim.w/dim.h,ar=aw/ah;
+   let w,h,x,y;if(fit==='fill'){if(ir>ar){h=ah;w=h*ir}else{w=aw;h=w/ir}}else{if(ir>ar){w=aw;h=w/ir}else{h=ah;w=h*ir}}
+   x=(pw-w)/2;y=(ph-h)/2;const fmt=items[i].file.type.includes('png')?'PNG':items[i].file.type.includes('webp')?'WEBP':'JPEG';pdf.addImage(data,fmt,x,y,w,h,undefined,'FAST');
+  }
+  pdf.save('NexLab-images.pdf');statusEl.textContent=`Done — ${items.length} image${items.length===1?'':'s'} added to the PDF.`;
+ }catch(err){console.error(err);statusEl.textContent='Could not create the PDF from one of the images.'}finally{btn.disabled=false}
+};
+render();
+</script>
+</body></html>

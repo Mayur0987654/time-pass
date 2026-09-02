@@ -1,0 +1,12 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Converter • NexLab</title><link rel="stylesheet" href="../../css/style.css"></head><body>
+<header class="nav-wrap"><nav class="nav container"><a class="brand" href="../../index.html"><span class="brand-dot"></span>NexLab</a><div class="nav-links"><a href="../../index.html">Home</a><a class="active" href="../index.html">Tools</a><a href="../../games/index.html">Games</a></div></nav></header>
+<main class="container"><section class="page-head"><div class="eyebrow">TOOL</div><h1>Universal Converter</h1><p>Quick conversions without leaving the page.</p></section>
+<section class="panel"><div class="field"><label>Category</label><select id="category"><option value="length">Length</option><option value="temperature">Temperature</option><option value="storage">Digital storage</option></select></div><div class="field"><label>Value</label><input id="value" type="number" value="1" step="any"></div><div class="two-col"><div class="field"><label>From</label><select id="from"></select></div><div class="field"><label>To</label><select id="to"></select></div></div><div class="result" id="result">1</div></section></main>
+<script>
+const units={length:{Meter:1,Kilometer:1000,Centimeter:.01,Millimeter:.001,Inch:.0254,Foot:.3048,Mile:1609.344},storage:{Byte:1,Kilobyte:1024,Megabyte:1048576,Gigabyte:1073741824,Terabyte:1099511627776}};
+const category=document.getElementById('category'),from=document.getElementById('from'),to=document.getElementById('to'),value=document.getElementById('value'),result=document.getElementById('result');
+function populate(){from.innerHTML='';to.innerHTML='';let names=category.value==='temperature'?['Celsius','Fahrenheit','Kelvin']:Object.keys(units[category.value]);names.forEach((n,i)=>{from.add(new Option(n,n));to.add(new Option(n,n));if(i===1)to.selectedIndex=1});calc()}
+function temp(v,a,b){let c=a==='Celsius'?v:a==='Fahrenheit'?(v-32)*5/9:v-273.15;return b==='Celsius'?c:b==='Fahrenheit'?c*9/5+32:c+273.15}
+function calc(){let v=parseFloat(value.value);if(Number.isNaN(v)){result.textContent='Enter a value';return}let out=category.value==='temperature'?temp(v,from.value,to.value):v*units[category.value][from.value]/units[category.value][to.value];result.textContent=`${Number(out.toPrecision(10))} ${to.value}`}
+[category,from,to,value].forEach(el=>el.addEventListener('input',category===el?populate:calc));populate();
+</script></body></html>
